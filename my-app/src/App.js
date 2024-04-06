@@ -9,6 +9,7 @@ import Reverse from "./component/Reverse";
 import NetworkWeb from "./component/NetworkWeb";
 import Pentesting from "./component/Pentesting";
 import InsecureDataStorage from "./component/InsecureDataStorage";
+import Adb from "./component/Adb"
  
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Navbar />
         </header>
         <main className="main">
+          <Adb/>
           <div>
             <h1>this is our android pentesting Website</h1>
           </div>

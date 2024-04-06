@@ -407,6 +407,59 @@ app.get('/download-report', (req, res) => {
 });
 
 
+// ADB api
+// Endpoint to handle the ADB command execution
+// Endpoint to handle the ADB command execution
+app.get('/run-adb-command', (req, res) => {
+  const adbDevicesCommand = '/usr/bin/adb devices'; // Correct path to the adb executable
+
+  exec(adbDevicesCommand, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error executing ADB devices command:', error);
+      res.status(500).json({ error: 'Error executing ADB devices command' });
+      return;
+    }
+    console.log('ADB devices command output:', stdout);
+    const devicesOutput = stdout;
+    let commands = [];
+    if (devicesOutput.includes('List of devices attached')) {
+      commands = [
+        "adb shell",
+        "adb install <path_to_apk>",
+        "adb uninstall <package_name>",
+        "adb push <local_path> <remote_path>",
+        "adb pull <remote_path> <local_path>",
+        "adb reboot",
+        "adb shell dumpsys battery",
+        "adb shell pm list packages",
+        "adb shell wm size",
+        "adb shell getprop",
+        "adb shell df",
+        "adb shell top",
+        "adb shell ip address show",
+        "adb shell dumpsys sensorservice"
+      ];
+    }
+    res.json({ output: devicesOutput, commands });
+  });
+});
+
+// Endpoint to execute ADB commands
+app.get('/execute-adb-command/:command', (req, res) => {
+  const adbCommand = req.params.command;
+
+  exec(adbCommand, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error executing ADB command:', error);
+      res.status(500).json({ error: 'Error executing ADB command' });
+      return;
+    }
+    console.log('ADB command output:', stdout);
+    res.json({ output: stdout });
+  });
+});
+
+
 
 const port = 4000;
 app.listen(port, () => {
