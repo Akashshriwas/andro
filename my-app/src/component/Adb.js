@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Adb.css"; // Import CSS file
 
 function Adb() {
   const [output, setOutput] = useState("");
@@ -31,24 +32,21 @@ function Adb() {
   };
 
   return (
-    <div>
+    <div className="container1">
       <button onClick={handleClick} disabled={loading}>
         Run ADB Command
       </button>
-      {loading && <p>Loading...</p>}
-      {output && commands.length > 0 && (
-        <div>
-          <p>Output: {output}</p>
-          <p>Available Commands:</p>
-          <ul>
-            {commands.map((command, index) => (
-              <li key={index}>
-                <button onClick={() => handleCommandClick(command)}>{command}</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {loading && <p className="loading">Loading...</p>}
+      <div className="button-container">
+        {commands.map((command, index) => (
+          <button key={index} onClick={() => handleCommandClick(command)}>
+            {command}
+          </button>
+        ))}
+      </div>
+      <div className=" adb11">
+      {output && <p className="output">Output: {output}</p>}
+      </div>
     </div>
   );
 }
