@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
- 
+
 import Navbar from "./component/Navbar";
 import StaticToolpage from "./component/StaticToolpage";
 import DynamicToolPage from "./component/DynamicToolPage";
@@ -9,8 +9,8 @@ import Reverse from "./component/Reverse";
 import NetworkWeb from "./component/NetworkWeb";
 import Pentesting from "./component/Pentesting";
 import InsecureDataStorage from "./component/InsecureDataStorage";
-import Adb from "./component/Adb"
- 
+import Adb from "./component/Adb";
+
 function App() {
   return (
     <Router>
@@ -19,10 +19,9 @@ function App() {
           <Navbar />
         </header>
         <main className="main">
-          <Adb/>
-          <div>
+          {/* <div>
             <h1>this is our android pentesting Website</h1>
-          </div>
+          </div> */}
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="/static" element={<StaticToolpage />} />
@@ -88,9 +87,10 @@ function App() {
     </Router>
   );
 }
- 
+
 const Home = () => (
   <section className="hero">
+    <Adb />
     {/* <div className="hero-content">
       <h1>Welcome to Our Website</h1>
       <p>Discover the latest advancements in technology and innovation.</p>
@@ -103,5 +103,5 @@ const Home = () => (
     </div> */}
   </section>
 );
- 
+
 export default App;

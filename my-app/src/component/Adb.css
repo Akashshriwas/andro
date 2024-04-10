@@ -45,8 +45,8 @@
     margin-top: 16px;
   }
 
-  .adb11{
-    background-color: chocolate;
+  .output-container{
+    /* background-color: chocolate; */
     margin-top: 16px; /* Add margin to separate from the button container */
  
   padding: 10px; /* Add padding */

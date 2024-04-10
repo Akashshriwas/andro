@@ -46,8 +46,9 @@ export default function Reportsections({
       {reportsections.map((section, index) => (
         <div className="section" key={index}>
           <div
-            className={`section-header ${expandedSections[index] ? "open" : ""
-              }`}
+            className={`section-header ${
+              expandedSections[index] ? "open" : ""
+            }`}
             onClick={() => {
               toggleSection(index);
             }}
@@ -57,10 +58,11 @@ export default function Reportsections({
               {expandedSections[index] ? "-" : "+"}
             </div>
           </div>
-          {expandedSections[index] && (
+          {Boolean(expandedSections[index]) ? (
             <div
-              className={`section-content ${expandedSections[index] ? "open" : ""
-                }`}
+              className={`section-content ${
+                expandedSections[index] ? "open" : ""
+              }`}
             >
               {/* {
                 section.map((s, idx) => {
@@ -78,14 +80,14 @@ export default function Reportsections({
                 >
                   {/* {section.subSections.length} Subsection */}
                   {/* {section.subSections.length > 1 ? "s" : ""}: */}
-                  <div
+                  {/* <div
                     className="toggle-icon"
                     onClick={() => {
                       toggleSection(index);
                     }}
                   >
                     {expandedSections[index] ? "-" : "+"}
-                  </div>
+                  </div> */}
                 </div>
               )}
               {expandedSections[index] &&
@@ -95,11 +97,12 @@ export default function Reportsections({
                     {section.subSections.map((subsection, subIndex) => (
                       <div key={subIndex}>
                         <div
-                          className={`subsection-title ${expandedSubSections[index] &&
-                              expandedSubSections[index][subIndex]
+                          className={`subsection-title ${
+                            expandedSubSections[index] &&
+                            expandedSubSections[index][subIndex]
                               ? "open"
                               : ""
-                            }`}
+                          }`}
                           onClick={() => {
                             toggleSubSection(index, subIndex);
                             console.log("Section Title:", section.title);
@@ -114,26 +117,27 @@ export default function Reportsections({
                             );
                           }}
                         >
-                           <div className="title-container">
-      <span className="title">{subsection.title}</span>
-      <span className="cwe1"> {subsection.cwe}</span>
-    </div>
+                          <div className="title-container">
+                            <span className="title">{subsection.title}</span>
+                            <span className="cwe1"> {subsection.cwe}</span>
+                          </div>
                           <div className="toggle-icon">
                             {expandedSubSections[index] &&
-                              expandedSubSections[index][subIndex]
+                            expandedSubSections[index][subIndex]
                               ? "-"
                               : "+"}
                           </div>
                         </div>
                         <div
-                          className={`subsection-content ${expandedSubSections[index] &&
-                              expandedSubSections[index][subIndex]
+                          className={`subsection-content ${
+                            expandedSubSections[index] &&
+                            expandedSubSections[index][subIndex]
                               ? "open"
                               : ""
-                            }`}
+                          }`}
                         >
                           {expandedSubSections[index] &&
-                            expandedSubSections[index][subIndex] ? (
+                          expandedSubSections[index][subIndex] ? (
                             <pre>{subsection.content}</pre>
                           ) : null}
                         </div>
@@ -142,6 +146,8 @@ export default function Reportsections({
                   </div>
                 )}
             </div>
+          ) : (
+            <></>
           )}
         </div>
       ))}

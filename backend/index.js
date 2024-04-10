@@ -236,17 +236,17 @@ app.post('/run-command', (req, res) => {
   let command = '';
 
   if (tool === 'Androwarn') {
-    toolPath = '/home/lavkush/tools/androwarn/androwarn.py';
+    toolPath = '/home/lavkush/Desktop/thesis/androwarn/androwarn.py';
     command = `python3 ${toolPath} -i "${apkInfo.filePath.replace(/\\/g, '\\\\')}" -r txt -v 1`;
     // console.log(command)
     // console.log(apkInfo.filePath); // Log the filePath for debugging purposes
   } else if (tool === 'Androbugs') {
-    toolPath = '/home/lavkush/tools/androbugs2/androbugs.py';
+    toolPath = '/home/lavkush/Desktop/thesis/androbugs2/androbugs.py';
     command = `python3 "${toolPath}" -f "${apkInfo.filePath.replace(/\\/g, '\\\\')}"`;
 
   } else if (tool === 'qark') {
     renameToApk(apkInfo.filePath)
-    toolPath = '/home/lavkush/tools/qark/qark/qark.py';
+    toolPath = '/home/lavkush/Desktop/qark/qark/qark.py';
     command = `qark --apk "${apkInfo.filePath}.apk" --report-type json`;
     console.log(command)
   } else {
@@ -261,15 +261,15 @@ app.post('/run-command', (req, res) => {
     // ...
   
     // Generate a unique file name\
-    console.log('std', stdout)
+    // console.log('std', stdout)
     // console.log('Error message : ', error.message)
     // console.log('--------')
-    console.log('error : ', stderr)
+    // console.log('error : ', stderr)
     // console.log('\n\n')
     let str = "backend"
-    // if (tool == 'qark'){
-    //   str = "Finish writing report to"
-    // }
+    if (tool == 'qark'){
+      str = "Finish writing report to"
+    }
     let ind = stdout.indexOf(str)+str.length+1
     let fileName = stdout.slice(ind)
     // let endIdx = fileName.indexOf('.csv') + 4
@@ -357,121 +357,121 @@ app.post('/run-command', (req, res) => {
 
 
 
-function deleteOldFiles() {
-  fs.readdir(uploadDirectory, (err, files) => {
-    if (err) {
-      console.error('Error reading upload directory:', err);
-      return;
-    }
+// function deleteOldFiles() {
+//   fs.readdir(uploadDirectory, (err, files) => {
+//     if (err) {
+//       console.error('Error reading upload directory:', err);
+//       return;
+//     }
 
-    // Sort the files by modified date in ascending order
-    files.sort((a, b) => {
-      return fs.statSync(uploadDirectory + a).mtime.getTime() - fs.statSync(uploadDirectory + b).mtime.getTime();
-    });
+//     // Sort the files by modified date in ascending order
+//     files.sort((a, b) => {
+//       return fs.statSync(uploadDirectory + a).mtime.getTime() - fs.statSync(uploadDirectory + b).mtime.getTime();
+//     });
 
-    // Calculate the number of files to delconst express = require('express');
-const app = express();
-const cors = require('cors');
-const mongooseConnection = require('./db');
-const multer = require('multer');
-const mongoose = require('mongoose')
-const upload = multer({ dest: 'uploads/' });
-const path = require('path');
-const fs = require('fs'); 
-const cweSchema = require('./CWEDB')
-const AdmZip = require('adm-zip')
-// const reportDirectory = path.join(__dirname, 'reports');
+//     // Calculate the number of files to delconst express = require('express');
+// const app = express();
+// const cors = require('cors');
+// const mongooseConnection = require('./db');
+// const multer = require('multer');
+// const mongoose = require('mongoose')
+// const upload = multer({ dest: 'uploads/' });
+// const path = require('path');
+// const fs = require('fs'); 
+// const cweSchema = require('./CWEDB')
+// const AdmZip = require('adm-zip')
+// // const reportDirectory = path.join(__dirname, 'reports');
 
-// const stagingAreaDirectory = 'staging_area/';
-const fileMapping = {}; // Maintain a mapping of original filenames to unique identifiers
-
-
+// // const stagingAreaDirectory = 'staging_area/';
+// const fileMapping = {}; // Maintain a mapping of original filenames to unique identifiers
 
 
-mongooseConnection();
-const maxFileCount = 10; // Maximum number of files to store
-const uploadDirectory = 'uploads/';
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
-
-app.use(cors());
-app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
 
-app.get('/getcwe/:cwe',async (req, res)=>{
-  // let cweNum = req.
-  const cwe = req.params.cwe
-  const cweObj = await cweSchema.findOne({"CWE_No" : cwe})
-  if(cweObj == undefined) {
-    res.json({success : false})
-    console.log('cwe object does not exist')
-    return;
-  }
-  console.log('cwe object exists')
-  res.json({success : true, data : cweObj})
-})
+// mongooseConnection();
+// const maxFileCount = 10; // Maximum number of files to store
+// const uploadDirectory = 'uploads/';
+// app.use(function(req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
 
-app.post('/makeCWE', async (req, res) => {
-  // const cweNum = req.body
-  const cweObj = req.body;
+// app.use(cors());
+// app.use(express.json());
+
+// app.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
+
+
+// app.get('/getcwe/:cwe',async (req, res)=>{
+//   // let cweNum = req.
+//   const cwe = req.params.cwe
+//   const cweObj = await cweSchema.findOne({"CWE_No" : cwe})
+//   if(cweObj == undefined) {
+//     res.json({success : false})
+//     console.log('cwe object does not exist')
+//     return;
+//   }
+//   console.log('cwe object exists')
+//   res.json({success : true, data : cweObj})
+// })
+
+// app.post('/makeCWE', async (req, res) => {
+//   // const cweNum = req.body
+//   const cweObj = req.body;
   
-  cweSchema.create(cweObj).then((res) => {
-    console.log('some result', res)
-  }, (err) => {
-    console.log('error ', err)
-  })
-  res.json({'success' : true, cweObj})
-})
+//   cweSchema.create(cweObj).then((res) => {
+//     console.log('some result', res)
+//   }, (err) => {
+//     console.log('error ', err)
+//   })
+//   res.json({'success' : true, cweObj})
+// })
 
-const { exec } = require('child_process');
+// const { exec } = require('child_process');
 
-function convertZipToApk(zipFilePath, apkFilePath) {
-  try {
-      const zip = new AdmZip(zipFilePath);
-      const zipEntries = zip.getEntries();
+// function convertZipToApk(zipFilePath, apkFilePath) {
+//   try {
+//       const zip = new AdmZip(zipFilePath);
+//       const zipEntries = zip.getEntries();
 
-      // Assuming there's only one file in the ZIP (the APK file)
-      const apkEntry = zipEntries[0];
-      const apkBuffer = apkEntry.getData();
+//       // Assuming there's only one file in the ZIP (the APK file)
+//       const apkEntry = zipEntries[0];
+//       const apkBuffer = apkEntry.getData();
 
-      fs.writeFileSync(apkFilePath, apkBuffer);
-      console.log('APK file created successfully:', apkFilePath);
-  } catch (error) {
-      console.error('Error converting ZIP to APK:', error);
-  }
-}
+//       fs.writeFileSync(apkFilePath, apkBuffer);
+//       console.log('APK file created successfully:', apkFilePath);
+//   } catch (error) {
+//       console.error('Error converting ZIP to APK:', error);
+//   }
+// }
 
-function renameToApk(filePath) {
-  try {
-      // Get the file extension of the original file
-      const fileExt = path.extname(filePath);
-      console.log(`-----\nExtension : ${fileExt}\n------`)
-      // Check if the file extension is not already '.apk'
-      if (fileExt !== '.apk') {
-          // Create the new file path with '.apk' extension
-          // const newFilePath = filePath.replace(fileExt, '.apk');
-          const newFilePath = filePath + '.apk'
-          // console.log(`-----\nExtension : ${fileExt}\n------`)
-          // Rename the file
-          fs.renameSync(filePath, newFilePath);
+// function renameToApk(filePath) {
+//   try {
+//       // Get the file extension of the original file
+//       const fileExt = path.extname(filePath);
+//       console.log(`-----\nExtension : ${fileExt}\n------`)
+//       // Check if the file extension is not already '.apk'
+//       if (fileExt !== '.apk') {
+//           // Create the new file path with '.apk' extension
+//           // const newFilePath = filePath.replace(fileExt, '.apk');
+//           const newFilePath = filePath + '.apk'
+//           // console.log(`-----\nExtension : ${fileExt}\n------`)
+//           // Rename the file
+//           fs.renameSync(filePath, newFilePath);
 
-          console.log('File renamed successfully:', newFilePath);
-      } else {
-          console.log('File already has .apk extension:', filePath);
-      }
-  } catch (error) {
-      console.error('Error renaming file:', error);
-  }
-}
+//           console.log('File renamed successfully:', newFilePath);
+//       } else {
+//           console.log('File already has .apk extension:', filePath);
+//       }
+//   } catch (error) {
+//       console.error('Error renaming file:', error);
+//   }
+// }
 
 
 
@@ -510,6 +510,235 @@ function deleteOldFiles() {
 
 
 
+// app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
+//   if (req.file) {
+//     // File uploaded successfully
+//     const { originalname, path, mimetype } = req.file;
+//     console.log(path)
+//     // Process the uploaded APK file and extract information
+//     // Implement your APK analysis logic here to extract the necessary information
+//     // You can use libraries like APKTool or AndroGuard to extract APK information
+
+//     // Example implementation using mock APK information
+//     const apkInfo = {
+//       packageName: 'com.example.app',
+//       versionName: '1.0',
+//       permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
+//       filePath: path, // Assign the file path to the filePath property
+//       // Add more relevant APK information
+//     };
+
+//     res.json({ apkInfo });
+//   } else {
+//     // No file uploaded
+//     res.status(400).json({ error: 'No file uploaded' });
+//   }
+//   deleteOldFiles();
+// });
+
+
+// app.post('/delete-apk', (req, res) => {
+//   const { apkIdentifier } = req.body;
+
+//   if (!apkIdentifier) {
+//     return res.status(400).json({ error: 'APK identifier is missing' });
+//   }
+//   const pathTillNow =  process.cwd()
+//   // Construct the file path based on the unique identifier
+//   const filePath = path.join(pathTillNow, uploadDirectory, apkIdentifier);
+//   console.log('File path 208 : ', filePath)
+//   console.log('Upload directory : ', uploadDirectory)
+//   console.log('Deleting file:', filePath);
+//   fs.unlink(filePath, (err) => {
+//     if (err) {
+//       console.error('Error deleting file:', filePath, err);
+//       return res.status(500).json({ success : false, error: 'Error deleting file' });
+//     }
+
+//     console.log('Deleted file:', filePath);
+
+//     // You can perform additional tasks here if needed
+//     // ...
+
+//     res.json({ success : true, message: 'APK deleted successfully' });
+//   });
+// });
+
+
+
+
+
+// // app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
+// //   if (req.file) {
+// //     // File uploaded successfully
+// //     const { originalname, path: uploadedFilePath, mimetype } = req.file;
+
+// //     // Process the uploaded APK file and extract information
+// //     // ...
+
+// //     // Example implementation using mock APK information
+// //     const apkInfo = {
+// //       packageName: 'com.example.app',
+// //       versionName: '1.0',
+// //       permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
+// //       filePath: uploadedFilePath, // Assign the uploaded file path to the filePath property
+// //       // Add more relevant APK information
+// //     };
+
+// //     // Move the uploaded file to the staging area directory
+// //     const newFilePath = path.join(__dirname, stagingAreaDirectory, originalname);
+// //     fs.renameSync(uploadedFilePath, newFilePath); // Move the file
+
+// //     res.json({ apkInfo });
+// //   } else {
+// //     // No file uploaded
+// //     res.status(400).json({ error: 'No file uploaded' });
+// //   }
+// //   deleteOldFiles();
+// // });
+
+
+// // app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
+// //   if (req.file) {
+// //     // File uploaded successfully
+// //     const { originalname, path: uploadedFilePath, mimetype } = req.file;
+
+// //     // Process the uploaded APK file and extract information
+// //     // ...
+// //     const apkInfo = {
+// //             packageName: 'com.example.app',
+// //             versionName: '1.0',
+// //             permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
+// //             filePath: uploadedFilePath, // Assign the uploaded file path to the filePath property
+// //             // Add more relevant APK information
+// //           };
+      
+
+// //     // Generate a sanitized file name
+// //     const sanitizedFileName = apkInfo.packageName.replace(/\s+/g, '_') + '_report.txt';
+
+// //     // Construct the file path within the report directory
+// //     const filePath = path.join(reportDirectory, sanitizedFileName);
+
+// //     // Move the uploaded file to the staging area directory
+// //     const newFilePath = path.join(__dirname, stagingAreaDirectory, originalname);
+// //     fs.renameSync(uploadedFilePath, newFilePath); // Move the file
+
+// //     // Update the filePath property in the apkInfo object
+// //     apkInfo.filePath = filePath; // Use the sanitized file path
+
+// //     res.json({ apkInfo });
+// //   } else {
+// //     // No file uploaded
+// //     res.status(400).json({ error: 'No file uploaded' });
+// //   }
+// //   deleteOldFiles();
+// // });
+
+
+
+// app.get('/download-report', (req, res) => {
+//   const { fileName } = req.query;
+
+//   if (!fileName) {
+//     return res.status(400).json({ error: 'File name is missing' });
+//   }
+
+//   // Specify the directory where the report files are stored
+//   const reportDirectory = 'C:/Users/HP/Desktop/react/phone/backend'; // Replace with the actual directory path
+
+//   // Construct the full file path
+//   const filePath = path.join(reportDirectory, fileName);
+
+//   // Check if the file exists
+//   if (fs.existsSync(filePath)) {
+//     // Set the appropriate headers and trigger file download
+//     res.download(filePath, fileName);
+//   } else {
+//     res.status(404).json({ error: 'File not found' });
+//   }
+// });
+
+
+// // ADB api
+// // Endpoint to handle the ADB command execution
+// // Endpoint to handle the ADB command execution
+// app.get('/run-adb-command', (req, res) => {
+//   const adbDevicesCommand = '/usr/bin/adb devices'; // Correct path to the adb executable
+
+//   exec(adbDevicesCommand, (error, stdout, stderr) => {
+//     if (error) {
+//       console.error('Error executing ADB devices command:', error);
+//       res.status(500).json({ error: 'Error executing ADB devices command' });
+//       return;
+//     }
+//     console.log('ADB devices command output:', stdout);
+//     const devicesOutput = stdout;
+//     let commands = [];
+//     if (devicesOutput.includes('List of devices attached')) {
+//       commands = [
+//         "adb shell",
+//         "adb install <path_to_apk>",
+//         "adb uninstall <package_name>",
+//         "adb push <local_path> <remote_path>",
+//         "adb pull <remote_path> <local_path>",
+//         "adb reboot",
+//         "adb shell dumpsys battery",
+//         "adb shell pm list packages",
+//         "adb shell wm size",
+//         "adb shell getprop",
+//         "adb shell df",
+//         "adb shell top",
+//         "adb shell ip address show",
+//         "adb shell dumpsys sensorservice"
+//       ];
+//     }
+//     res.json({ output: devicesOutput, commands });
+//   });
+// });
+
+// // Endpoint to execute ADB commands
+// app.get('/execute-adb-command/:command', (req, res) => {
+//   const adbCommand = req.params.command;
+
+//   exec(adbCommand, (error, stdout, stderr) => {
+//     if (error) {
+//       console.error('Error executing ADB command:', error);
+//       res.status(500).json({ error: 'Error executing ADB command' });
+//       return;
+//     }
+//     console.log('ADB command output:', stdout);
+//     res.json({ output: stdout });
+//   });
+// });
+
+
+
+// const port = 4000;
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });ete
+//     const filesToDeleteCount = files.length - maxFileCount;
+
+//     // Delete older files if the count exceeds the limit
+//     if (filesToDeleteCount > 0) {
+//       const filesToDelete = files.slice(0, filesToDeleteCount);
+
+//       filesToDelete.forEach((file) => {
+//         fs.unlink(uploadDirectory + file, (err) => {
+//           if (err) {
+//             console.error('Error deleting file:', file, err);
+//           } else {
+//             console.log('Deleted file:', file);
+//           }
+//         });
+//       });
+//     }
+//   });
+// }
+
+
+
 app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
   if (req.file) {
     // File uploaded successfully
@@ -663,6 +892,7 @@ app.get('/download-report', (req, res) => {
 // ADB api
 // Endpoint to handle the ADB command execution
 // Endpoint to handle the ADB command execution
+
 app.get('/run-adb-command', (req, res) => {
   const adbDevicesCommand = '/usr/bin/adb devices'; // Correct path to the adb executable
 
@@ -678,6 +908,7 @@ app.get('/run-adb-command', (req, res) => {
     if (devicesOutput.includes('List of devices attached')) {
       commands = [
         "adb shell",
+        
         "adb install <path_to_apk>",
         "adb uninstall <package_name>",
         "adb push <local_path> <remote_path>",
@@ -692,240 +923,12 @@ app.get('/run-adb-command', (req, res) => {
         "adb shell ip address show",
         "adb shell dumpsys sensorservice"
       ];
-    }
-    res.json({ output: devicesOutput, commands });
-  });
-});
 
-// Endpoint to execute ADB commands
-app.get('/execute-adb-command/:command', (req, res) => {
-  const adbCommand = req.params.command;
-
-  exec(adbCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error('Error executing ADB command:', error);
-      res.status(500).json({ error: 'Error executing ADB command' });
-      return;
-    }
-    console.log('ADB command output:', stdout);
-    res.json({ output: stdout });
-  });
-});
-
-
-
-const port = 4000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});ete
-    const filesToDeleteCount = files.length - maxFileCount;
-
-    // Delete older files if the count exceeds the limit
-    if (filesToDeleteCount > 0) {
-      const filesToDelete = files.slice(0, filesToDeleteCount);
-
-      filesToDelete.forEach((file) => {
-        fs.unlink(uploadDirectory + file, (err) => {
-          if (err) {
-            console.error('Error deleting file:', file, err);
-          } else {
-            console.log('Deleted file:', file);
-          }
-        });
-      });
-    }
-  });
-}
-
-
-
-app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
-  if (req.file) {
-    // File uploaded successfully
-    const { originalname, path, mimetype } = req.file;
-    console.log(path)
-    // Process the uploaded APK file and extract information
-    // Implement your APK analysis logic here to extract the necessary information
-    // You can use libraries like APKTool or AndroGuard to extract APK information
-
-    // Example implementation using mock APK information
-    const apkInfo = {
-      packageName: 'com.example.app',
-      versionName: '1.0',
-      permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
-      filePath: path, // Assign the file path to the filePath property
-      // Add more relevant APK information
-    };
-
-    res.json({ apkInfo });
-  } else {
-    // No file uploaded
-    res.status(400).json({ error: 'No file uploaded' });
-  }
-  deleteOldFiles();
-});
-
-
-app.post('/delete-apk', (req, res) => {
-  const { apkIdentifier } = req.body;
-
-  if (!apkIdentifier) {
-    return res.status(400).json({ error: 'APK identifier is missing' });
-  }
-  const pathTillNow =  process.cwd()
-  // Construct the file path based on the unique identifier
-  const filePath = path.join(pathTillNow, uploadDirectory, apkIdentifier);
-  console.log('File path 208 : ', filePath)
-  console.log('Upload directory : ', uploadDirectory)
-  console.log('Deleting file:', filePath);
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error('Error deleting file:', filePath, err);
-      return res.status(500).json({ success : false, error: 'Error deleting file' });
-    }
-
-    console.log('Deleted file:', filePath);
-
-    // You can perform additional tasks here if needed
-    // ...
-
-    res.json({ success : true, message: 'APK deleted successfully' });
-  });
-});
-
-
-
-
-
-// app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
-//   if (req.file) {
-//     // File uploaded successfully
-//     const { originalname, path: uploadedFilePath, mimetype } = req.file;
-
-//     // Process the uploaded APK file and extract information
-//     // ...
-
-//     // Example implementation using mock APK information
-//     const apkInfo = {
-//       packageName: 'com.example.app',
-//       versionName: '1.0',
-//       permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
-//       filePath: uploadedFilePath, // Assign the uploaded file path to the filePath property
-//       // Add more relevant APK information
-//     };
-
-//     // Move the uploaded file to the staging area directory
-//     const newFilePath = path.join(__dirname, stagingAreaDirectory, originalname);
-//     fs.renameSync(uploadedFilePath, newFilePath); // Move the file
-
-//     res.json({ apkInfo });
-//   } else {
-//     // No file uploaded
-//     res.status(400).json({ error: 'No file uploaded' });
-//   }
-//   deleteOldFiles();
-// });
-
-
-// app.post('/upload-apk', upload.single('apkFile'), (req, res) => {
-//   if (req.file) {
-//     // File uploaded successfully
-//     const { originalname, path: uploadedFilePath, mimetype } = req.file;
-
-//     // Process the uploaded APK file and extract information
-//     // ...
-//     const apkInfo = {
-//             packageName: 'com.example.app',
-//             versionName: '1.0',
-//             permissions: ['android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION'],
-//             filePath: uploadedFilePath, // Assign the uploaded file path to the filePath property
-//             // Add more relevant APK information
-//           };
       
-
-//     // Generate a sanitized file name
-//     const sanitizedFileName = apkInfo.packageName.replace(/\s+/g, '_') + '_report.txt';
-
-//     // Construct the file path within the report directory
-//     const filePath = path.join(reportDirectory, sanitizedFileName);
-
-//     // Move the uploaded file to the staging area directory
-//     const newFilePath = path.join(__dirname, stagingAreaDirectory, originalname);
-//     fs.renameSync(uploadedFilePath, newFilePath); // Move the file
-
-//     // Update the filePath property in the apkInfo object
-//     apkInfo.filePath = filePath; // Use the sanitized file path
-
-//     res.json({ apkInfo });
-//   } else {
-//     // No file uploaded
-//     res.status(400).json({ error: 'No file uploaded' });
-//   }
-//   deleteOldFiles();
-// });
-
-
-
-app.get('/download-report', (req, res) => {
-  const { fileName } = req.query;
-
-  if (!fileName) {
-    return res.status(400).json({ error: 'File name is missing' });
-  }
-
-  // Specify the directory where the report files are stored
-  const reportDirectory = 'C:/Users/HP/Desktop/react/phone/backend'; // Replace with the actual directory path
-
-  // Construct the full file path
-  const filePath = path.join(reportDirectory, fileName);
-
-  // Check if the file exists
-  if (fs.existsSync(filePath)) {
-    // Set the appropriate headers and trigger file download
-    res.download(filePath, fileName);
-  } else {
-    res.status(404).json({ error: 'File not found' });
-  }
-});
-
-
-// ADB api
-// Endpoint to handle the ADB command execution
-// Endpoint to handle the ADB command execution
-app.get('/run-adb-command', (req, res) => {
-  const adbDevicesCommand = '/usr/bin/adb devices'; // Correct path to the adb executable
-
-  exec(adbDevicesCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error('Error executing ADB devices command:', error);
-      res.status(500).json({ error: 'Error executing ADB devices command' });
-      return;
-    }
-    console.log('ADB devices command output:', stdout);
-    const devicesOutput = stdout;
-    let commands = [];
-    if (devicesOutput.includes('List of devices attached')) {
-      commands = [
-        "adb shell",
-        "adb install <path_to_apk>",
-        "adb uninstall <package_name>",
-        "adb push <local_path> <remote_path>",
-        "adb pull <remote_path> <local_path>",
-        "adb reboot",
-        "adb shell dumpsys battery",
-        "adb shell pm list packages",
-        "adb shell wm size",
-        "adb shell getprop",
-        "adb shell df",
-        "adb shell top",
-        "adb shell ip address show",
-        "adb shell dumpsys sensorservice"
-      ];
     }
     res.json({ output: devicesOutput, commands });
   });
 });
-
 // Endpoint to execute ADB commands
 app.get('/execute-adb-command/:command', (req, res) => {
   const adbCommand = req.params.command;
