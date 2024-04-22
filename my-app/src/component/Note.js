@@ -12,6 +12,7 @@ import Toolinfo from "./Toolinfo";
 import Reportsection from "./Reportsection";
 import Apkselection from "./Apkselection";
 import "./Note.css";
+// import Dropdownr from "./Dropdownr";
 
 export default function Note() {
   const [selectedItem, setSelectedItem] = useState("");
@@ -795,6 +796,7 @@ export default function Note() {
           handleItemClick={handleItemClick}
           isRunning={isRunning}
         />
+
         <Toolinfo toolInfo={toolInfo} />
       </div>
       <Apkselection
