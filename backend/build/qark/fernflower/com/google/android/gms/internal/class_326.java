@@ -80,14 +80,14 @@ public final class class_326 implements Callback {
 
       Throwable var10000;
       boolean var10001;
-      label662: {
+      label661: {
          class_325 var4;
          try {
             var4 = (class_325)this.field_933.get(var1);
          } catch (Throwable var77) {
             var10000 = var77;
             var10001 = false;
-            break label662;
+            break label661;
          }
 
          class_325 var78;
@@ -101,12 +101,12 @@ public final class class_326 implements Callback {
             } catch (Throwable var75) {
                var10000 = var75;
                var10001 = false;
-               break label662;
+               break label661;
             }
 
             var78 = var4;
          } else {
-            label663: {
+            label662: {
                try {
                   this.field_934.removeMessages(0, var4);
                   if (var4.method_1082(var2)) {
@@ -115,25 +115,25 @@ public final class class_326 implements Callback {
                } catch (Throwable var74) {
                   var10000 = var74;
                   var10001 = false;
-                  break label662;
+                  break label661;
                }
 
-               label664: {
-                  label665: {
+               label663: {
+                  label664: {
                      try {
                         var4.method_1077(var2);
                         switch(var4.method_1083()) {
                         case 1:
                            break;
                         case 2:
-                           break label665;
-                        default:
                            break label664;
+                        default:
+                           break label663;
                         }
                      } catch (Throwable var76) {
                         var10000 = var76;
                         var10001 = false;
-                        break label662;
+                        break label661;
                      }
 
                      try {
@@ -141,11 +141,11 @@ public final class class_326 implements Callback {
                      } catch (Throwable var73) {
                         var10000 = var73;
                         var10001 = false;
-                        break label662;
+                        break label661;
                      }
 
                      var78 = var4;
-                     break label663;
+                     break label662;
                   }
 
                   try {
@@ -154,25 +154,25 @@ public final class class_326 implements Callback {
                   } catch (Throwable var72) {
                      var10000 = var72;
                      var10001 = false;
-                     break label662;
+                     break label661;
                   }
 
                   var78 = var4;
-                  break label663;
+                  break label662;
                }
 
                var78 = var4;
             }
          }
 
-         label629:
+         label628:
          try {
             boolean var3 = var78.method_1081();
             return var3;
          } catch (Throwable var71) {
             var10000 = var71;
             var10001 = false;
-            break label629;
+            break label628;
          }
       }
 

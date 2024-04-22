@@ -10,6 +10,7 @@ import NetworkWeb from "./component/NetworkWeb";
 import Pentesting from "./component/Pentesting";
 import InsecureDataStorage from "./component/InsecureDataStorage";
 import Adb from "./component/Adb";
+import heroImage from "./images/hero.jpg"; // Import the hero image
 
 function App() {
   return (
@@ -90,17 +91,17 @@ function App() {
 
 const Home = () => (
   <section className="hero">
-    <Adb />
-    {/* <div className="hero-content">
+    <div className="hero-image">
+      <img src={heroImage} alt="Hero Image" />
+    </div>
+    <div className="hero-content">
       <h1>Welcome to Our Website</h1>
       <p>Discover the latest advancements in technology and innovation.</p>
-      <a href="/about" className="btn btn-primary">
-        Learn More
-      </a>
+      {/* <a href="/about" className="btn btn-primary">
+      Learn More
+    </a> */}
     </div>
-    <div className="hero-image">
-      <img src="hero-image.jpg" alt="Hero Image" />
-    </div> */}
+    <Adb />
   </section>
 );
 

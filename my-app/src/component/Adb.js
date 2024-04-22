@@ -5,13 +5,20 @@ function Adb() {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [commands, setCommands] = useState([]);
+  const [devices, setDevices] = useState([]);
+  const [selectedDevice, setSelectedDevice] = useState("");
 
   const handleClick = async () => {
     setLoading(true);
     try {
       const response = await fetch("http://localhost:4000/run-adb-command");
       const data = await response.json();
-      setOutput(data.output);
+      console.log("Response from backend:", data);
+      if (data.devices && Array.isArray(data.devices)) {
+        setDevices(data.devices);
+      } else {
+        setDevices([]); // Set devices to empty array if data.devices is not valid
+      }
       setCommands(data.commands);
     } catch (error) {
       console.error("Error:", error);
@@ -19,10 +26,16 @@ function Adb() {
     setLoading(false);
   };
 
+  const handleDeviceSelect = (device) => {
+    setSelectedDevice(device);
+  };
+
   const handleCommandClick = async (command) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:4000/execute-adb-command/${command}`);
+      const response = await fetch(
+        `http://localhost:4000/execute-adb-command/${selectedDevice}/${command}`
+      );
       const data = await response.json();
       setOutput(data.output);
     } catch (error) {
@@ -31,12 +44,27 @@ function Adb() {
     setLoading(false);
   };
 
+  console.log("Devices:", devices); // Add this line to check devices array
+
   return (
     <div className="container1">
       <button onClick={handleClick} disabled={loading}>
         View Connected devices
       </button>
       {loading && <p className="loading">Loading...</p>}
+      <div className="devices-container">
+        {devices.length > 0 &&
+          devices.map((device, index) => (
+            <button
+              key={index}
+              onClick={() => handleDeviceSelect(device)}
+              className={selectedDevice === device ? "selected" : ""}
+            >
+              {device} {/* Render the device name here */}
+            </button>
+          ))}
+      </div>
+
       <div className="button-container">
         {commands.map((command, index) => (
           <button key={index} onClick={() => handleCommandClick(command)}>
@@ -45,7 +73,12 @@ function Adb() {
         ))}
       </div>
       <div className="output-container">
-        {output && <p className="output">Output: {output}</p>}
+        {output && (
+          <div className="output">
+            <h3>ADB Command Output:</h3>
+            <pre>{output}</pre>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -53,34 +86,34 @@ function Adb() {
 
 function getCommandLabel(command) {
   switch (command) {
-    case "adb shell":
+    case "shell":
       return "Shell";
-    case "adb install <path_to_apk>":
+    case "install <path_to_apk>":
       return "Install APK";
-    case "adb uninstall <package_name>":
+    case "uninstall <package_name>":
       return "Uninstall Package";
-    case "adb push <local_path> <remote_path>":
+    case "push <local_path> <remote_path>":
       return "Push File";
-    case "adb pull <remote_path> <local_path>":
+    case "pull <remote_path> <local_path>":
       return "Pull File";
-    case "adb reboot":
+    case "reboot":
       return "Reboot";
-    case "adb shell dumpsys battery":
+    case "shell dumpsys battery":
       return "Dump Battery";
-    case "adb shell pm list packages":
-      return "List Packages";
-    case "adb shell wm size":
+    case "shell pm list packages":
+      return "Installed Packages";
+    case "shell wm size":
       return "Window Size";
-    case "adb shell getprop":
-      return "Get Properties";
-    case "adb shell df":
-      return "Disk Free";
-    case "adb shell top":
-      return "Top Processes";
-    case "adb shell ip address show":
+    case "shell getprop":
+      return "Properties Of Device";
+    case "shell df":
+      return "Device's storage partitions";
+    case "shell top":
+      return "Real-time CPU and Memory Usage";
+    case "shell ip address show":
       return "Show IP Address";
-    case "adb shell dumpsys sensorservice":
-      return "Dump Sensors";
+    case "shell dumpsys sensorservice":
+      return "Sensors Available";
     default:
       return command;
   }
