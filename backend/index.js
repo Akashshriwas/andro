@@ -9,8 +9,11 @@ const path = require("path");
 const fs = require("fs");
 const cweSchema = require("./CWEDB");
 const AdmZip = require("adm-zip");
-// const reportDirectory = path.join(__dirname, 'reports');
+// const mainBackendComponent = require("./server");
+const server = require("./server");
+const bodyParser = require("body-parser");
 
+const PORT = process.env.PORT || 5000;
 // const stagingAreaDirectory = 'staging_area/';
 const fileMapping = {}; // Maintain a mapping of original filenames to unique identifiers
 
@@ -27,6 +30,19 @@ app.use(function (req, res, next) {
 
 app.use(cors());
 app.use(express.json());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Mount the main backend component alongside your Express app
+
+// app.use(upload.single("file"));
+
+// Set up other middleware and routes as needed
+
+// Mount the main backend component alongside your Express app
+// app.use("/", mainBackendComponent);
+app.use("/api/apktool/run", server);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -889,7 +905,6 @@ app.get("/run-adb-command", (req, res) => {
       commands = [
         "shell",
         "install <path_to_apk>",
-        "shell wm size",
         "uninstall <package_name>",
         "push <local_path> <remote_path>",
         "pull <remote_path> <local_path>",
