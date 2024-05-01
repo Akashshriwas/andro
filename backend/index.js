@@ -941,6 +941,41 @@ app.get("/execute-adb-command/:deviceID/:command", (req, res) => {
   });
 });
 
+
+
+
+// nmap endpoint #########################################
+
+app.post('/run-tool', (req, res) => {
+  const selectedTool = req.body.tool;
+
+  // Define commands to run for each tool
+  const toolCommands = {
+    'nmap': 'nmap --version', // Example command for nmap, replace it with the actual command for nmap
+    // Add commands for other tools here
+  };
+
+  const command = toolCommands[selectedTool];
+  if (!command) {
+    return res.status(400).json({ error: 'Invalid tool selected' });
+  }
+
+  // Execute the command
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing command: ${error.message}`);
+      return res.status(500).json({ error: 'An error occurred while running the tool' });
+    }
+    if (stderr) {
+      console.error(`Command stderr: ${stderr}`);
+    }
+
+    // Return the stdout (output) as the report
+    res.json({ report: stdout });
+  });
+});
+
+
 // ###########################
 const port = 4000;
 app.listen(port, () => {
