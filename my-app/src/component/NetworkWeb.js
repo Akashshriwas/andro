@@ -1,31 +1,54 @@
 import React, { useState } from 'react';
 import './DynamicToolPage.css';
 import Instruction from './Instruction.js';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
+import './NetworkWeb.css'
 
 const Reverse = () => {
   const [selectedTool, setSelectedTool] = useState('');
-  const [report, setReport] = useState(null);
+  const [selectedFunctionality, setSelectedFunctionality] = useState('');
+  const [ipAddress, setIpAddress] = useState('');
+  const [report, setReport] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleToolChange = (event) => {
     setSelectedTool(event.target.value);
+    setSelectedFunctionality('');
+    setIpAddress('');
+  };
+
+  const handleFunctionalityChange = (event) => {
+    setSelectedFunctionality(event.target.value);
+  };
+
+  const handleIpAddressChange = (event) => {
+    setIpAddress(event.target.value);
   };
 
   const runTool = () => {
-    if (!selectedTool) {
-      return; // Do nothing if no tool is selected
+    if (!selectedTool || !selectedFunctionality || !ipAddress) {
+      setError('Please select a tool, functionality, and provide an IP address.');
+      return;
     }
 
-    // Send a POST request to the backend to run the selected tool
-    axios.post('http://localhost:4000/run-tool', { tool: selectedTool })
-      .then(response => {
-        // Update the report state with the received report from the backend
-        setReport(response.data.report);
-      })
-      .catch(error => {
-        console.error('Error running tool:', error);
-        // Handle error, e.g., display an error message to the user
-      });
+    setLoading(true);
+    setError('');
+
+    axios.post('http://localhost:4000/run-tool', {
+      tool: selectedTool,
+      nmapFunctionality: selectedFunctionality,
+      ipAddress: ipAddress
+    })
+    .then(response => {
+      setReport(response.data.report);
+    })
+    .catch(error => {
+      setError('Error running tool: ' + error.message);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   };
 
   return (
@@ -42,19 +65,28 @@ const Reverse = () => {
         <option value="zANTI">zANTI</option>
         <option value="MWR Labs Mercury">MWR Labs Mercury</option>
         <option value="Mallory">Mallory</option>
-        {/* <option value="Mallory">Mallory</option> */}
-        
-
         {/* Add more tool options here */}
       </select>
-      {selectedTool && (
-        <div className="tool-info">
-          <h3>Selected Tool: {selectedTool}</h3>
-          <button onClick={runTool}>Run {selectedTool}</button>
+      {selectedTool === 'nmap' && (
+        <div>
+          <select className="functionality-select" value={selectedFunctionality} onChange={handleFunctionalityChange}>
+            <option value="">Select a functionality</option>
+            <option value="version">Version</option>
+            <option value="TCP SYN Scan">TCP SYN Scan</option>
+            <option value="TCP Connect Scan">TCP Connect Scan</option>
+            <option value="UDP Scan">UDP Scan</option>
+            <option value="HOST Scan">HOST Scan</option>
+            {/* Add more nmap functionalities here */}
+          </select>
+          <label>IP Address:</label>
+          <input type="text" value={ipAddress} onChange={handleIpAddressChange} />
         </div>
       )}
+      <button onClick={runTool} disabled={loading}>Run {selectedTool}</button>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
       {report && (
-        <div className="report">
+        <div>
           <h3>Report</h3>
           <pre>{report}</pre>
         </div>

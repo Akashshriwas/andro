@@ -946,35 +946,35 @@ app.get("/execute-adb-command/:deviceID/:command", (req, res) => {
 
 // nmap endpoint #########################################
 
+const nmapCommands = {
+  'version': 'nmap --version',
+  'TCP SYN Scan': 'nmap -sS',
+  'TCP Connect Scan': 'nmap -sV',
+  'UDP Scan': 'nmap -sU',
+  'HOST Scan':'nmap -sn'
+  // Add more nmap functionalities here
+};
+
 app.post('/run-tool', (req, res) => {
-  const selectedTool = req.body.tool;
+  const { tool, nmapFunctionality, ipAddress } = req.body;
 
-  // Define commands to run for each tool
-  const toolCommands = {
-    'nmap': 'nmap --version', // Example command for nmap, replace it with the actual command for nmap
-    // Add commands for other tools here
-  };
+  if (tool === 'nmap' && nmapFunctionality && nmapCommands[nmapFunctionality] && ipAddress) {
+    const command = `${nmapCommands[nmapFunctionality]} ${ipAddress}`;
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing nmap command: ${error.message}`);
+        return res.status(500).json({ error: 'An error occurred while running the tool' });
+      }
+      if (stderr) {
+        console.error(`nmap command stderr: ${stderr}`);
+      }
 
-  const command = toolCommands[selectedTool];
-  if (!command) {
-    return res.status(400).json({ error: 'Invalid tool selected' });
+      res.json({ report: stdout });
+    });
+  } else {
+    res.status(400).json({ error: 'Invalid request' });
   }
-
-  // Execute the command
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing command: ${error.message}`);
-      return res.status(500).json({ error: 'An error occurred while running the tool' });
-    }
-    if (stderr) {
-      console.error(`Command stderr: ${stderr}`);
-    }
-
-    // Return the stdout (output) as the report
-    res.json({ report: stdout });
-  });
 });
-
 
 // ###########################
 const port = 4000;
