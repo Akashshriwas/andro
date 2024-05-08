@@ -75,7 +75,7 @@ function Adb() {
       <div className="output-container">
         {output && (
           <div className="output">
-            <h3>ADB Command Output:</h3>
+            {/* <h3>ADB Command Output:</h3> */}
             <pre>{output}</pre>
           </div>
         )}
