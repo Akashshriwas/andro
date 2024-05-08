@@ -46,11 +46,11 @@ function Home() {
         </div>
       </div>
       <div className="hero-content">
-        <h1>Welcome to Our Website</h1>
+        {/* <h1>Welcome to Our Website</h1>
         <p>Discover the latest advancements in technology and innovation.</p>
         <Link to="/about" className="btn btn-primary">
           Learn More
-        </Link>
+        </Link> */}
       </div>
       <Adb />
     </section>
