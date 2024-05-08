@@ -121,7 +121,7 @@ export default function Navbar() {
       <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            <span className="brand-icon">🐞</span> Android Pentesting
+            <span className="brand-icon">🐞</span> Suraksha Pentesting Framework
           </Link>
           <div className="Tool">
             <div className="tool1 ">

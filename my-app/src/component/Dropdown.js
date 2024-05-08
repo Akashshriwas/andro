@@ -43,6 +43,14 @@ export default function Dropdown({ selectedItem, handleItemClick, isRunning }) {
               Qark
             </button>
           </li>
+          <li>
+            <button
+              className="dropdown-item"
+              onClick={() => handleItemClick("APKLeaks")}
+            >
+              APKLeaks
+            </button>
+          </li>
         </ul>
       </div>
     </div>

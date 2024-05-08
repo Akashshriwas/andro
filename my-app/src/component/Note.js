@@ -692,6 +692,15 @@ export default function Note() {
     return parsedSections;
   };
 
+  const generateSectionsForApkLeaks = (reportContent) => {
+    console.log(
+      "------------ generate section for tool APKLeaks -------------"
+    );
+    reportContent = reportContent.slice(reportContent.indexOf("[LinkFinder]"));
+    console.log(reportContent);
+    let parsedSections = [];
+  };
+
   const generateSections = (reportContent) => {
     let delimiter;
     let titleRegex;
@@ -703,7 +712,10 @@ export default function Note() {
       parsedSections = generateSectionsForAndrobugs(reportContent);
     } else if (selectedItem === "qark") {
       parsedSections = generateSectionsForqark(reportContent);
-    } else {
+    } else if (selectedItem === "APKLeaks") {
+      parsedSections = generateSectionsForApkLeaks(reportContent);
+    }
+    {
       delimiter = "[+]"; // Default delimiter
       titleRegex = /^(.+)/;
     }
