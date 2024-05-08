@@ -903,11 +903,11 @@ app.get("/run-adb-command", (req, res) => {
     let commands = [];
     if (devicesOutput.length > 0) {
       commands = [
-        "shell",
-        "install <path_to_apk>",
-        "uninstall <package_name>",
-        "push <local_path> <remote_path>",
-        "pull <remote_path> <local_path>",
+        // "shell",
+        // "install <path_to_apk>",
+        // "uninstall <package_name>",
+        // "push <local_path> <remote_path>",
+        // "pull <remote_path> <local_path>",
         "reboot",
         "shell dumpsys battery",
         "shell pm list packages",
@@ -941,29 +941,33 @@ app.get("/execute-adb-command/:deviceID/:command", (req, res) => {
   });
 });
 
-
-
-
 // nmap endpoint #########################################
 
 const nmapCommands = {
-  'version': 'nmap --version',
-  'TCP SYN Scan': 'nmap -sS',
-  'TCP Connect Scan': 'nmap -sV',
-  'UDP Scan': 'nmap -sU',
-  'HOST Scan':'nmap -sn'
+  version: "nmap --version",
+  "TCP SYN Scan": "nmap -sS",
+  "TCP Connect Scan": "nmap -sV",
+  "UDP Scan": "nmap -sU",
+  "HOST Scan": "nmap -sn",
   // Add more nmap functionalities here
 };
 
-app.post('/run-tool', (req, res) => {
+app.post("/run-tool", (req, res) => {
   const { tool, nmapFunctionality, ipAddress } = req.body;
 
-  if (tool === 'nmap' && nmapFunctionality && nmapCommands[nmapFunctionality] && ipAddress) {
+  if (
+    tool === "nmap" &&
+    nmapFunctionality &&
+    nmapCommands[nmapFunctionality] &&
+    ipAddress
+  ) {
     const command = `${nmapCommands[nmapFunctionality]} ${ipAddress}`;
     exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing nmap command: ${error.message}`);
-        return res.status(500).json({ error: 'An error occurred while running the tool' });
+        return res
+          .status(500)
+          .json({ error: "An error occurred while running the tool" });
       }
       if (stderr) {
         console.error(`nmap command stderr: ${stderr}`);
@@ -972,7 +976,7 @@ app.post('/run-tool', (req, res) => {
       res.json({ report: stdout });
     });
   } else {
-    res.status(400).json({ error: 'Invalid request' });
+    res.status(400).json({ error: "Invalid request" });
   }
 });
 
