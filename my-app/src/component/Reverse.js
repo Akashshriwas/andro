@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "./DynamicToolPage.css";
 import "./Reverse.css";
 import Instruction from "./Instruction.js";
 const axios = require("axios");
@@ -13,6 +12,9 @@ const Reverse = () => {
 
   const handleToolChange = (event) => {
     setSelectedTool(event.target.value);
+    setApkFile(null);
+    setReportPath("");
+    setResult(null);
   };
 
   const handleFileChange = (event) => {
@@ -20,75 +22,59 @@ const Reverse = () => {
   };
 
   const handleRun = () => {
-    if (!selectedTool || !apkFile) return;
+    if (!selectedTool) return;
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("apkFile", apkFile);
-
-    fetch(`http://localhost:4000/api/${selectedTool}/run`, {
-      method: "POST",
-      body: formData,
-      responseType: "arraybuffer",
-    })
-      .then((res) => res.arrayBuffer())
-      .then((data) => {
-        // setReportPath(data.reportPath); // Save the report path received from backend
-        setResult(data);
-        console.log(data);
-        setReportPath(true);
-        setLoading(false);
+    if (selectedTool === "JD-GUI") {
+      fetch(`http://localhost:4000/api/jd-gui/run`, {
+        method: "POST",
       })
-      .catch((error) => {
-        console.error("Error running tool:", error);
-        setLoading(false);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error running JD-GUI:", error);
+          setLoading(false);
+        });
+    } else if (apkFile) {
+      const formData = new FormData();
+      formData.append("apkFile", apkFile);
+
+      fetch(`http://localhost:4000/api/${selectedTool}/run`, {
+        method: "POST",
+        body: formData,
+        responseType: "arraybuffer",
+      })
+        .then((res) => res.arrayBuffer())
+        .then((data) => {
+          setResult(data);
+          console.log(data);
+          setReportPath(true);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error running tool:", error);
+          setLoading(false);
+        });
+    }
   };
 
   const handleDownload = () => {
-    // Assuming result contains the binary data of the zip file
-    const blob = new Blob([result], { type: "application/zip" }); // Set MIME type to application/zip
+    const blob = new Blob([result], { type: "application/zip" });
 
-    // Create a temporary URL for the Blob
     const blobUrl = URL.createObjectURL(blob);
 
-    // Create an anchor element
     const link = document.createElement("a");
     link.href = blobUrl;
-    link.download = "downloaded_file.zip"; // Specify the filename with .zip extension
+    link.download = "downloaded_file.zip";
 
-    // Programmatically click the link to start the download
     link.click();
 
-    // Clean up the temporary URL and anchor element
     URL.revokeObjectURL(blobUrl);
     link.remove();
   };
-
-  // const handleDownload = () => {
-  //   console.log(result);
-  //   const blob = new Blob([result], { type: "application/zip" }); // Set MIME type to application/zip
-
-  //   // Create a temporary URL for the Blob
-  //   const blobUrl = URL.createObjectURL(blob);
-
-  //   // Create an anchor element
-  //   const link = document.createElement("a");
-  //   link.href = blobUrl;
-  //   link.download = "downloaded_file.zip"; // Specify the filename with .zip extension
-
-  //   // Programmatically click the link to start the download
-  //   link.click();
-
-  //   // Clean up the temporary URL and anchor element
-  //   URL.revokeObjectURL(blobUrl);
-  //   link.remove();
-  // };
-
-  // const handleDownload = () => {
-  //   if (!reportPath) return;
-  //   window.location.href = `http://localhost:4000/${reportPath}`; // Download the report file
-  // };
 
   return (
     <div className="page-containerr">
@@ -104,18 +90,21 @@ const Reverse = () => {
         <option value="d2j-dex2jar">d2j-dex2jar</option>
         <option value="JD-GUI">JD-GUI</option>
         <option value="Virtuous Ten studio">Virtuous Ten studio</option>
-        {/* Add other tool options here */}
       </select>
-      <h2>Upload an APK File</h2>
-      <input type="file" accept=".apk" onChange={handleFileChange} />
-      {selectedTool && apkFile && (
+      {selectedTool !== "JD-GUI" && (
+        <>
+          <h2>Upload an APK File</h2>
+          <input type="file" accept=".apk" onChange={handleFileChange} />
+        </>
+      )}
+      {selectedTool && (
         <div className="tool-infoo">
           <h3>Selected Tool: {selectedTool}</h3>
-          <h3>Uploaded APK File: {apkFile.name}</h3>
+          {apkFile && selectedTool !== "JD-GUI" && <h3>Uploaded APK File: {apkFile.name}</h3>}
           <button onClick={handleRun} disabled={loading}>
             {loading ? "Running..." : "Run"}
           </button>
-          {reportPath && (
+          {reportPath && selectedTool !== "JD-GUI" && (
             <div className="report">
               <h4>Report:</h4>
               <button onClick={handleDownload}>Download Report</button>

@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Mount the main backend component alongside your Express app
 // app.use("/", mainBackendComponent);
-app.use("/api/apktool/run", server);
+app.use("/api", server);
 
 app.use("/api/:tool/malware", upload.single("apkFile"), async (req, res) => {
   const apkFilePath = req.file.path;
@@ -1115,7 +1115,24 @@ app.post("/run-tool", (req, res) => {
 
       res.json({ report: stdout });
     });
-  } else {
+  } else if(tool == "BurpSuite"){
+    const command = "burpsuite"
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing BurpSuite command: ${error.message}`);
+        return res
+          .status(500)
+          .json({ error: "An error occurred while running the tool" });
+      }
+      if (stderr) {
+        console.error(`BurpSuite command stderr: ${stderr}`);
+      }
+
+      // res.json({ report: stdout });
+    });
+    res.json("BurpSuite completed");
+  } 
+  else {
     res.status(400).json({ error: "Invalid request" });
   }
 });

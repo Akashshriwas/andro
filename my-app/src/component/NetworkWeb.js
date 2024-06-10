@@ -82,6 +82,21 @@ const Reverse = () => {
           <input type="text" value={ipAddress} onChange={handleIpAddressChange} />
         </div>
       )}
+      {selectedTool === 'BurpSuite' && (
+        <div>
+          <select className="functionality-select" value={selectedFunctionality} onChange={handleFunctionalityChange}>
+            <option value="">Select a functionality</option>
+            <option value="version">Version</option>
+            <option value="TCP SYN Scan">TCP SYN Scan</option>
+            <option value="TCP Connect Scan">TCP Connect Scan</option>
+            <option value="UDP Scan">UDP Scan</option>
+            <option value="HOST Scan">HOST Scan</option>
+            {/* Add more nmap functionalities here */}
+          </select>
+          <label>IP Address:</label>
+          <input type="text" value={ipAddress} onChange={handleIpAddressChange} />
+        </div>
+      )}
       <button onClick={runTool} disabled={loading}>Run {selectedTool}</button>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}

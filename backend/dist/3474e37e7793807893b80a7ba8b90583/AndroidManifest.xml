@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" package="edu.mit.application_modeling">
+  <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />
+  <application android:debuggable="true" android:theme="@edu.mit.application_modeling:style/AppTheme" android:icon="@edu.mit.application_modeling:drawable/ic_launcher" android:name=".MyApplication" android:allowBackup="true" android:label="@edu.mit.application_modeling:string/app_name">
+    <activity android:name=".MainActivity" android:label="@edu.mit.application_modeling:string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity android:label="@edu.mit.application_modeling:string/app_name" android:name=".application_modeling.AnotherActivity" />
+  </application>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+</manifest>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="fill_parent" android:paddingLeft="@edu.mit.application_modeling:dimen/activity_horizontal_margin" android:layout_width="fill_parent" android:paddingTop="@edu.mit.application_modeling:dimen/activity_vertical_margin" android:paddingRight="@edu.mit.application_modeling:dimen/activity_horizontal_margin" android:paddingBottom="@edu.mit.application_modeling:dimen/activity_vertical_margin">
+  <TextView android:layout_height="wrap_content" android:text="@edu.mit.application_modeling:string/hello_world" android:layout_width="wrap_content" />
+</RelativeLayout>
