@@ -10,6 +10,7 @@ import NetworkWeb from "./component/NetworkWeb";
 import Pentesting from "./component/Pentesting";
 import InsecureDataStorage from "./component/InsecureDataStorage";
 import Adb from "./component/Adb";
+import FileRetrive from "./component/FileRetrive";
 
 import heroImage from "./images/hero.jpg"; // Import the hero image
 import image2 from "./images/hero2.jpg"; // Import additional images
@@ -53,6 +54,22 @@ function Home() {
         </Link> */}
       </div>
       <Adb />
+
+      <div
+        className="database-button"
+        style={{
+          marginTop: "40px",
+        }}
+      >
+        <button>
+          <a
+            href="/file-retrive"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Show Tool History
+          </a>
+        </button>
+      </div>
     </section>
   );
 }
@@ -76,13 +93,13 @@ function App() {
             <Route path="/reverse" element={<Reverse />} />
             <Route path="/network-web" element={<NetworkWeb />} />
             <Route path="/pentesting-environments" element={<Pentesting />} />
+            <Route path="/file-retrive" element={<FileRetrive />} />
             <Route
               path="/insecure-data-storage"
               element={<InsecureDataStorage />}
             />
             {/* Add routes for other tools */}
-          </Routes>
-          ``{" "}
+          </Routes>{" "}
         </main>
         <footer>
           <div class="footer">

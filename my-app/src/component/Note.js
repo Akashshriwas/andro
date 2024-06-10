@@ -15,6 +15,7 @@ import "./Note.css";
 // import Dropdownr from "./Dropdownr";
 
 export default function Note() {
+  const [apkFileName, setApkFileName] = useState("");
   const [selectedItem, setSelectedItem] = useState("");
   const [result, setResult] = useState("");
   const [isRunning, setIsRunning] = useState(false);
@@ -37,6 +38,9 @@ export default function Note() {
     setToolInfo(getToolInfo(item));
     setReportSections([]);
     setReportContent("");
+
+    // console.log("x::::::::::::::: ", item);
+    // console.log("y::::::::::::::: ", selectedItem);
 
     setExpandedSections((prevExpandedSections) => {
       const resetExpandedSections = prevExpandedSections.map(() => false);
@@ -115,7 +119,9 @@ export default function Note() {
       "--------------- Running handleApkd selection method ------------------"
     );
     const choosedFile = event.target.files[0];
+    setApkFileName(choosedFile.name);
     console.log("apk selected in handle apk selection:", choosedFile);
+    console.log(choosedFile.name);
     console.log("selected apks : ", selectedApks);
     if (choosedFile) {
       console.log("prev apks:", selectedApks);
@@ -302,52 +308,24 @@ export default function Note() {
       return;
     }
 
-    // const cachedReport = localStorage.getItem(selectedDropdownItem.name);
-
-    // if (cachedReport) {
-    //   // If the report is already cached, display it and show a notification
-    //   setReportContent(cachedReport);
-    //   setReportAlreadyCached(true);
-    //   alert('The report is already generated and available for download.');
-    //   return;
-    // }
-
-    // const sampleCachedReport = "   ";
-
-    // const selectedApkInfo = selectedApks.find((apk) => apk.name === selectedItem);
-    // const selectedApk = selectedApks.find((apk) => apk === selectedDropdownItem);
-
     setIsRunning(true);
     axios
       .post("http://localhost:4000/run-command", {
         tool: selectedItem,
         apkInfo: selectedApk,
+        apkName: apkFileName,
       })
       .then((response) => {
         console.log("----------------------");
         console.log("response : ", response.data);
+        // console.log(
+        //   "afdhghadkghadkghakdghadghakghakghadgh- -----------------------------------------------------------: ",
+        //   response
+        // );
         console.log("----------------------");
         setResult(response.data || "No result available");
-        // console.log('file path : ', response.data.reportFilePath)
-        // console.log(response.data)
-        generateSections(response.data); // Generate sections from the report content
-        // console.log("rrrr :",response.data)
-        // if (response.data.reportFilePath) {
-        //   axios
-        //     .get(`http://localhost:4000/${response.data.reportFilePath}`)
-        //     .then((response) => {
-        //       console.log('Report Content:', response.data);
-        //       setReportContent(response.data);
-        //     })
-        //     .catch((error) => {
-        //       console.error('Error fetching report content:', error);
-        //     });
-        // }
-        // if (response.data.reportContent) {
-        //   localStorage.setItem(selectedDropdownItem.name, response.data.reportContent);
-        //   setReportAlreadyCached(true);
 
-        // }
+        generateSections(response.data); // Generate sections from the report content
       })
       .catch((error) => {
         console.error(error);
@@ -403,149 +381,6 @@ export default function Note() {
 
     return parsedSections;
   };
-
-  ///////////////////////////////androbug report///////////////////////////////////////
-  // const generateSectionsForAndrobugs = (reportContent) => {
-  //   console.log("bbbb :",reportContent)
-  //   const delimiter = /(\[Critical\]|\[Warning\]|\[Notice\]|\[Info\])/;
-  //   const sections = reportContent.split(delimiter);
-  //   const parsedSections = [];
-
-  //   let currentTitle = '';
-  //   let combinedContent = '';
-  //   console.log('sections : ', sections)
-
-  //   for (let i = 1; i < sections.length; i += 2) {
-  //     let title = sections[i].trim();
-  //     let content = sections[i + 1].trim();
-  //     title = title.slice(1, title.length-1)
-
-  //     // if(cwedata[title]){
-  //     //   console.log('title', title)
-  //     //   // console.log(`content :${content}`)
-  //       // console.log(JSON.stringify(content))
-  //     //   // console.log('json', cwedata[title])
-  //     //   // console.log('json', cwedata[title][content])
-  //     //   // console.log('json : ', cwedata[title][content]["CWE_No"] )
-  //     // }
-  //     // console.log('json', cwedata[title])
-
-  //     ////////cwe data
-  //     // if (currentTitle === title) {
-  //     //   // If the title is the same as the previous section, append the content
-  //     //   if(cwedata[title] && cwedata[title][content]){
-  //     //     console.log('Number : ', cwedata[title][content]["CWE_No"])
-  //     //     content = cwedata[title][content]["CWE_No"] + " " + content
-  //     //   }
-  //     //   combinedContent += '\n' + content;
-  //     // } else {
-
-  //       // If the title is different, push the previous section and start a new one
-  //     //   if (currentTitle) {
-  //     //     if(cwedata[title] && cwedata[title][content]){
-  //     //       console.log('Number : ', cwedata[title][content]["CWE_No"])
-  //     //       content = cwedata[title][content]["CWE_No"] + " " + content
-  //     //     }
-  //     //     parsedSections.push({ title: currentTitle, content: combinedContent });
-  //     //   }
-  //     //   currentTitle = title;
-  //     //   if(cwedata[title] && cwedata[title][content]){
-  //     //     console.log('Number : ', cwedata[title][content]["CWE_No"])
-  //     //     content = cwedata[title][content]["CWE_No"] + " " + content
-  //     //   }
-  //     //   combinedContent = content;
-  //     // }
-
-  //     // if(cwedata[title]){
-  //     //   content = cwedata[title][content] + " --- " + content
-  //     // }
-  //     console.log('Value of title:', title);
-  //     console.log('Value of content:', content);
-  //     // console.log("mmmm:",parsedSections)
-  //   }
-
-  //   // Push the last section after the loop
-  //   if (currentTitle) {
-  //     parsedSections.push({ title: currentTitle, content: combinedContent });
-  //     console.log("m:",parsedSections)
-
-  //   }
-
-  //   console.log("mmmm:",parsedSections)
-  //   return parsedSections;
-  // };
-
-  ///////////////////////////////androbug report 2 ///////////////////////////////////////
-  //   const generateSectionsForAndrobugs = (reportContent) => {
-  //     const delimiter = /(\[Critical\]|\[Warning\]|\[Notice\]|\[Info\])/;
-  //     const subSectionDelimiter = /<([^>]+)>\s*:([\s\S]*?)(?=(?:<[^>]+>)|\[Critical\]|\[Warning\]|\[Notice\]|\[Info\]|$)/g;
-
-  //  // New delimiter for subsections
-  //     const sections = reportContent.split(delimiter);
-  //     const parsedSections = [];
-  //     let currentTitle = ''; // To keep track of the current title
-  //     let currentContent = ''; // To accumulate content for the current title
-
-  //     for (let i = 1; i < sections.length; i++) {
-  //       const titleMatch = sections[i].match(/\[(Critical|Warning|Notice|Info)\]/);
-
-  //       // Check if a valid title is found
-  //       if (titleMatch && titleMatch[1]) {
-  //         if (currentTitle !== '') {
-  //           console.log('Json', JSON.stringify(currentContent))
-  //           var cweNo = 2
-  //           if(currentTitle && cwedata[currentTitle] && currentContent && cwedata[currentTitle][currentContent]){
-  //             cweNo = cwedata[currentTitle][currentContent].CWE_No
-  //           }
-  //           // Push the accumulated content for the previous title
-  //           parsedSections.push({ c : cweNo, title: currentTitle, content: currentContent, subSections: [] });
-  //           // console.log("aaa :",subsections)
-  //         }
-
-  //         currentTitle = titleMatch[1];
-  //         console.log('Original Section:', sections[i]);
-  //         const subsections = sections[i].split(subSectionDelimiter).map(subsection => subsection.trim());
-  //         console.log('Subsections:', subsections);
-
-  //         // Remove the title from subsections
-  //         subsections.shift();
-
-  //         currentContent = subsections.join('\n');
-  //         console.log('Subsections:', subsections);
-  //       } else {
-  //         // If no valid title is found, append the content to the current title
-  //         currentContent += sections[i].trim() + '\n';
-  //       }
-  //     }
-
-  //     // Push the last accumulated section
-  //     if(currentTitle && cwedata[currentTitle] && currentContent && cwedata[currentTitle][currentContent]){
-  //       cweNo = cwedata[currentTitle][currentContent].CWE_No
-  //     }
-  //     if (currentTitle !== '') {
-  //       parsedSections.push({ c : cweNo, title: currentTitle, content: currentContent, subSections: [] });
-  //     }
-
-  //     // Merge sections of the same type into a single portion
-  //     const mergedSections = {};
-  //     parsedSections.forEach((section) => {
-  //       if (!mergedSections[section.title]) {
-  //         mergedSections[section.title] = {
-  //           c: section.c,
-  //           title: section.title,
-  //           content: section.content,
-  //           subSections: section.subSections.map(subsection => ({ title: subsection.title, content: subsection.content })),
-  //         };
-  //       } else {
-  //         mergedSections[section.title].content += '\n' + section.content;
-  //         mergedSections[section.title].subSections.push(...section.subSections.map(subsection => ({ title: subsection.title, content: subsection.content })));
-  //       }
-  //     });
-
-  //     console.log(mergedSections)
-  //     return Object.values(mergedSections);
-  //   };
-
   const generateSectionsForAndrobugs = (reportContent) => {
     // console.log('------------>>>>>>>>>>>>>', reportContent)
     // console.log('temp : ', JSON.stringify(temp))
@@ -720,84 +555,12 @@ export default function Note() {
       titleRegex = /^(.+)/;
     }
 
-    // const cweNumbers = cwedata[selectedItem]; // This will give you the CWE numbers for critical and warning points
-
-    // // Add CWE numbers to each section
-    // parsedSections.forEach((section) => {
-    //   const cweNumber = cweNumbers[section.title];
-    //   if (cweNumber) {
-    //     section.cweNumber = cweNumber;
-    //   }
-    // });
-
-    // ...
-
     setReportSections(parsedSections);
     setExpandedSections(new Array(parsedSections.length).fill(false));
     return parsedSections;
   };
 
-  const getToolInfo = () => {
-    // Return the corresponding tool information based on the selected item
-    // switch (selectedItem) {
-    //   case 'Androwarn':
-    //     return (
-    //       <>
-    //         <h3>Androwarn</h3>
-    //         <p>
-    //           Androwarn is an open-source static code analyzer designed specifically for detecting and assessing the security risks in Android applications. It is commonly used by security researchers, application developers, and penetration testers to identify potential vulnerabilities and weaknesses in Android apps.
-    //         </p>
-    //         <p>
-    //           Key Features:
-    //         </p>
-    //         <ul>
-    //           <li>Detects insecure data storage</li>
-    //           <li>Identifies permission misuse</li>
-    //           <li>Finds potential component exposure</li>
-    //           <li>Identifies other security vulnerabilities</li>
-    //         </ul>
-    //       </>
-    //     );
-    //   case 'Androbugs':
-    //     return (
-    //       <>
-    //         <h3>AndroBugs</h3>
-    //         <p>
-    //           AndroBugs uses static analysis techniques to inspect an Android app's code and identify issues such as insecure data storage, permissions misuse, component exposure, and other security vulnerabilities. By identifying these weaknesses, developers can take appropriate measures to secure their applications and protect user data.
-    //         </p>
-    //         <p>
-    //           Key Features:
-    //         </p>
-    //         <ul>
-    //           <li>Detects insecure data storage</li>
-    //           <li>Identifies permission misuse</li>
-    //           <li>Finds potential component exposure</li>
-    //           <li>Identifies other security vulnerabilities</li>
-    //         </ul>
-    //       </>
-    //     );
-    //   case 'Mobsf':
-    //     return (
-    //       <>
-    //         <h3>MOBSF (Mobile Security Framework)</h3>
-    //         <p>
-    //           MOBSF is an open-source framework and automated tool designed for mobile app security testing. It assists in identifying potential security vulnerabilities and weaknesses in mobile applications, primarily focused on Android and iOS platforms.
-    //         </p>
-    //         <p>
-    //           Key Features:
-    //         </p>
-    //         <ul>
-    //           <li>Comprehensive security testing for mobile apps</li>
-    //           <li>Supports both Android and iOS platforms</li>
-    //           <li>Identifies security vulnerabilities and weaknesses</li>
-    //           <li>Generates detailed security reports</li>
-    //         </ul>
-    //       </>
-    //     );
-    //   default:
-    //     return '';
-    // }
-  };
+  const getToolInfo = () => {};
 
   return (
     <div className="dropdown-container">
@@ -823,6 +586,15 @@ export default function Note() {
         handleApkDelete={handleApkDelete}
       />
       {/* <ResultDisplay result={result} isRunning={isRunning} /> */}
+
+      {console.log(
+        "Report sections : ------------------------- ",
+        reportSections
+      )}
+      {console.log(
+        "Expanded section : ---------------------------",
+        expandedSections
+      )}
       <Reportsection
         reportsections={reportSections}
         expandedSections={expandedSections}

@@ -1,0 +1,211 @@
+**********************************************************************************************
+**           AndroBugs Framework - Android App Security Vulnerability Scanner               **
+**                                    version: 2.0.0                                        **
+** This tool was originally created by Yu-Cheng Lin (@AndroBugs, http://www.AndroBugs.com)  **
+**                     Modifications by Jasper van Thuijl & Noam Drong                      **
+**********************************************************************************************
+Platform: Android
+Package Name: com.techfond.hackode
+Package Version Name: 1.1
+Package Version Code: 2
+Min Sdk: 8
+Target Sdk: 17
+MD5   : 59d2852a4ae71e50e7f9fb00b1b41afc
+SHA1  : e6e3f81772694a790a523ed555823c4721d2ce96
+SHA256: 26a03bdf26dc62e3a14353739abd7d31cfe4d4e70a5fafcc66a76d95930cd1bc
+SHA512: f3f52cf6f436b7f0b2b7306ef6d5fe3be971a1bc72ca8876cb73d9a2259cf73723fc15221709567be7bd472c902301e71bebddb8daf3cb8a7d6ecc3e7eb08ff0
+Analyze Signature: e039f5105a0fba0340de63d51edc10a0f3eeaacdc4ffc973ff7b64f638303a1c41ed4be357b4cba1312627050e04260dd239494c46ee5ef12d9fd1c35018e97c
+------------------------------------------------------------------------------------------------
+[Critical] <SSL_Security> SSL Connection Checking:
+           URLs that are NOT under SSL (Total: 8):
+               http://dig-nslookup.nmonitoring.com/dns-dig-nslookup.html?pingsub=1&domain=
+                   ->From class: Lcom/techfond/hackode/scanningtool/DnsDig;->onCreate(Landroid/os/Bundle;)V
+               http://feeds.feedburner.com/hackersonlineclub
+                   ->From class: Lcom/techfond/hackode/rss/RssTabsActivity;->onCreate(Landroid/os/Bundle;)V
+               http://feeds.feedburner.com/securityweek
+                   ->From class: Lcom/techfond/hackode/rss/RssTabsActivity;->onCreate(Landroid/os/Bundle;)V
+               http://traceroute.nmonitoring.com/?pingsub=1&ln=en&ip=
+                   ->From class: Lcom/techfond/hackode/scanningtool/TraceRoute;->onCreate(Landroid/os/Bundle;)V
+               http://who.is/whois/
+                   ->From class: Lcom/techfond/hackode/google/WhoisLookup;->onCreate(Landroid/os/Bundle;)V
+               http://www.nmonitoring.com/show-mx-record.html?mxsub=1&ip=
+                   ->From class: Lcom/techfond/hackode/scanningtool/Mx;->onCreate(Landroid/os/Bundle;)V
+               http://www.securityfocus.com/rss/vulnerabilities.xml
+                   ->From class: Lcom/techfond/hackode/rss/RssTabsActivity;->onCreate(Landroid/os/Bundle;)V
+               http://www.super-ping.com/?ping=
+                   ->From class: Lcom/techfond/hackode/scanningtool/Ping;->onCreate(Landroid/os/Bundle;)V
+
+[Warning]  AndroidManifest Exported Components Checking:
+           Found "exported" components(except for Launcher) for receiving outside applications' actions (AndroidManifest.xml).
+               These components can be initilized by other apps. You should add or modify the attribute to [exported="false"] if you don't
+           want to.
+               You can also protect it with a customized permission with "signature" or higher protectionLevel and specify in
+           "android:permission" attribute.
+                 activity => Menu
+
+[Warning] <WebView> WebView Local File Access Attacks Checking:
+           Found "setAllowFileAccess(true)" or not set(enabled by default) in WebView. The attackers could inject malicious script into
+           WebView and exploit the opportunity to access local resources. This can be mitigated or prevented by disabling local file system
+           access. (It is enabled by default)
+                    Note that this enables or disables file system access only. Assets and resources are still accessible using
+           file:///android_asset and file:///android_res.
+                    The attackers can use "mWebView.loadUrl("file:///data/data/[Your_Package_Name]/[File]");" to access app's local file.
+                    Reference: (1)https://labs.mwrinfosecurity.com/blog/2012/04/23/adventures-with-android-webviews/
+                               (2)http://developer.android.com/reference/android/webkit/WebSettings.html#setAllowFileAccess(boolean)
+                    Please add or modify "yourWebView.getSettings().setAllowFileAccess(false)" to your WebView:
+
+               Methods where WebSettings is used, and setAllowFileAccess might be enabled by default:
+               => Lcom/techfond/hackode/google/Config;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/Login;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/Mysql;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/Password;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/PhpConfig;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/Sql;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/google/WhoisLookup;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/scanningtool/DnsDig;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/scanningtool/Mx;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/scanningtool/Ping;->onCreate(Landroid/os/Bundle;)V
+               => Lcom/techfond/hackode/scanningtool/TraceRoute;->onCreate(Landroid/os/Bundle;)V
+
+[Warning] <WebView> WebView Potential XSS Attacks Checking:
+           Found "setJavaScriptEnabled(true)" in WebView, which could exposed to potential XSS attacks. Please check the web page code
+           carefully and sanitize the output:
+               => Lcom/techfond/hackode/scanningtool/Mx;->onCreate(Landroid/os/Bundle;)V (0x72) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/scanningtool/TraceRoute;->onCreate(Landroid/os/Bundle;)V (0x72) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/WhoisLookup;->onCreate(Landroid/os/Bundle;)V (0x72) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/PhpConfig;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/Mysql;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/scanningtool/Ping;->onCreate(Landroid/os/Bundle;)V (0x72) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/Sql;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/Password;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/Login;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/google/Config;->onCreate(Landroid/os/Bundle;)V (0x56) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+               => Lcom/techfond/hackode/scanningtool/DnsDig;->onCreate(Landroid/os/Bundle;)V (0x72) --->
+                    Landroid/webkit/WebSettings;->setJavaScriptEnabled(Z)V
+
+[Notice]  AndroidManifest Adb Backup Checking:
+           ADB Backup is ENABLED for this app (default: ENABLED). ADB Backup is a good tool for backing up all of your files. If it's open
+           for this app, people who have your phone can copy all of the sensitive data for this app in your phone (Prerequisite: 1.Unlock
+           phone's screen 2.Open the developer mode). The sensitive data may include lifetime access token, username or password, etc.
+               Security case related to ADB Backup:
+               1.http://www.securityfocus.com/archive/1/530288/30/0/threaded
+               2.http://blog.c22.cc/advisories/cve-2013-5112-evernote-android-insecure-storage-of-pin-data-bypass-of-pin-protection/
+               3.http://nelenkov.blogspot.co.uk/2012/06/unpacking-android-backups.html
+               Reference: http://developer.android.com/guide/topics/manifest/application-element.html#allowbackup
+
+[Info] <Command> Runtime Command Checking:
+           This app is not using critical function 'Runtime.getRuntime().exec("...")'.
+[Info] <Command> Executing "root" or System Privilege Checking:
+           Did not find codes checking "root" permission(su) or getting system permission (It's still possible we did not find out).
+[Info] <Database> SQLiteDatabase Transaction Deprecated Checking:
+           Ignore checking "SQLiteDatabase:beginTransactionNonExclusive" you're not using it.
+[Info] <Database> Android SQLite Databases Encryption (SQLite Encryption Extension (SEE)):
+           This app is "NOT" using SQLite Encryption Extension (SEE) on Android (http://www.sqlite.org/android) to encrypt or decrpyt
+           databases.
+[Info] <Database> Android SQLite Databases Encryption (SQLCipher):
+           This app is "NOT" using SQLCipher(http://sqlcipher.net/) to encrypt or decrpyt databases.
+[Info] <Database><#CVE-2011-3901#> Android SQLite Databases Vulnerability Checking:
+           This app is "NOT" using Android SQLite databases.
+[Info] <Debug> Android Debug Mode Checking:
+           DEBUG mode is OFF(android:debuggable="false") in AndroidManifest.xml.
+[Info]  Dynamic Code Loading:
+           No dynamic code loading(DexClassLoader) found.
+[Info]  External Storage Accessing:
+           External storage access not found.
+[Info]  File Unsafe Delete Checking:
+           Did not detect that you are unsafely deleting files.
+[Info] <#BID 64208, CVE-2013-6271#> Fragment Vulnerability Checking:
+           Did not detect the vulnerability of "Fragment" dynamically loading into "PreferenceActivity" or "SherlockPreferenceActivity"
+[Info] <Framework> App framework identification:
+           No frameworks detected (checking for Xamarin, Flutter, React Native). Furthermore, no encryption frameworks were detected
+           (checking for iJiami, Bangcle)
+[Info] <Hacker> Base64 String Encryption:
+           No encoded Base64 String or Urls found.
+[Info] <Database><Hacker> Key for Android SQLite Databases Encryption:
+           Did not find using the symmetric key(PRAGMA key) to encrypt the SQLite databases (It's still possible that it might use but we
+           did not find out).
+[Info] <Debug> Android Debug Certificate Checking:
+           App is signed with a production certificate. This is good.
+[Info] <Debug><Hacker> Code for Checking Android Debug Mode:
+           Did not detect code that checks whether debug mode is enabled
+[Info] <Hacker> APK Installing Source Checking:
+           Did not detect this app checks for APK installer sources.
+[Info] <KeyStore><Hacker> KeyStore File Location:
+           Did not find any possible BKS keystores or certificate keystore file (Notice: It does not mean this app does not use keystore):
+[Info] <KeyStore><Hacker> KeyStore Protection Checking:
+           Ignore checking KeyStore protected by password or not because you're not using KeyStore.
+[Info] <Hacker> Code Setting Preventing Screenshot Capturing:
+           Did not detect this app has code setting preventing screenshot capturing.
+[Info] <Signature><Hacker> Getting Signature Code Checking:
+           Did not detect this app is checking the signature in the code.
+[Info]  HttpURLConnection Android Bug Checking:
+           Ignore checking "http.keepAlive" because you're not using "HttpURLConnection".
+[Info] <KeyStore> KeyStore Type Checking:
+           KeyStore 'BKS' type check OK
+[Info]  Google Cloud Messaging Suggestion:
+           Nothing to suggest.
+[Info] <#CVE-2013-4787#> Master Key Type I Vulnerability:
+           No Master Key Type I Vulnerability in this APK.
+[Info]  App Sandbox Permission Checking:
+           No security issues "MODE_WORLD_READABLE" or "MODE_WORLD_WRITEABLE" found on 'openOrCreateDatabase' or 'openOrCreateDatabase2' or
+           'getDir' or 'getSharedPreferences' or 'openFileOutput'
+[Info]  Native Library Loading Checking:
+           No native library loaded.
+[Info]  AndroidManifest Dangerous ProtectionLevel of Permission Checking:
+           No "dangerous" protection level customized permission found (AndroidManifest.xml).
+[Info]  AndroidManifest PermissionGroup Checking:
+           PermissionGroup in permission tag of AndroidManifest sets correctly.
+[Info] <Implicit_Intent> Implicit Service Checking:
+           No dangerous implicit service.
+[Info]  AndroidManifest "intent-filter" Settings Checking:
+           "intent-filter" of AndroidManifest.xml check OK.
+[Info]  AndroidManifest Normal ProtectionLevel of Permission Checking:
+           No default or "normal" protection level customized permission found (AndroidManifest.xml).
+[Info] <#CVE-2013-6272#> AndroidManifest Exported Lost Prefix Checking:
+           No exported components that forgot to add "android:" prefix.
+[Info]  AndroidManifest ContentProvider Exported Checking:
+           No exported "ContentProvider" found (AndroidManifest.xml).
+[Info] <Sensitive_Information> Getting IMEI and Device ID:
+           Did not detect this app is getting the "device id(IMEI)" by "TelephonyManager.getDeviceId()" approach.
+[Info] <Sensitive_Information> Getting ANDROID_ID:
+           Did not detect this app is getting the 64-bit number "Settings.Secure.ANDROID_ID".
+[Info]  Codes for Sending SMS:
+           Did not detect this app has code for sending SMS messages (sendDataMessage, sendMultipartTextMessage or sendTextMessage).
+[Info] <System> AndroidManifest sharedUserId Checking:
+           This app does not use "android.uid.system" sharedUserId.
+[Info] <SSL_Security> SSL Implementation Checking (Verifying Host Name in Custom Classes):
+           Self-defined HOSTNAME VERIFIER checking OK.
+[Info] <SSL_Security> SSL Implementation Checking (Verifying Host Name in Fields):
+           Critical vulnerability "ALLOW_ALL_HOSTNAME_VERIFIER" field setting or "AllowAllHostnameVerifier" class instance not found.
+[Info] <SSL_Security> SSL Implementation Checking (Insecure component):
+           Did not detect SSLSocketFactory by insecure method "getInsecure".
+[Info] <SSL_Security> SSL Implementation Checking (HttpHost):
+           DEFAULT_SCHEME_NAME for HttpHost check: OK
+[Info] <SSL_Security> SSL Implementation Checking (WebViewClient for WebView):
+           Did not detect critical usage of "WebViewClient"(MITM Vulnerability).
+[Info] <SSL_Security> SSL Certificate Verification Checking:
+           Did not find vulnerable X509Certificate code.
+[Info] <Strandhogg> Standhogg 2.0:
+           This application does not seem to be vulnerable to the Standhogg 2.0 vulnerability
+[Info]  Unnecessary Permission Checking:
+           Permission 'android.permission.ACCESS_MOCK_LOCATION' sets correctly.
+[Info]  Accessing the Internet Checking:
+           No HTTP-related connection codes found.
+[Info]  AndroidManifest System Use Permission Checking:
+           No system-level critical use-permission found.
+[Info] <WebView><Remote Code Execution><#CVE-2013-4710#> WebView RCE Vulnerability Checking:
+           WebView addJavascriptInterface vulnerabilities not found.
+------------------------------------------------------------
+AndroBugs analyzing time: 0.046819 secs
+HACKER_DEBUGGABLE_CHECK elapsed time: 0.00034732604399323463 secs
+Total elapsed time: 0.854188 secs

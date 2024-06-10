@@ -12,6 +12,7 @@ const AdmZip = require("adm-zip");
 // const mainBackendComponent = require("./server");
 const server = require("./server");
 const bodyParser = require("body-parser");
+const pool = require("./database2");
 
 const PORT = process.env.PORT || 5000;
 // const stagingAreaDirectory = 'staging_area/';
@@ -49,15 +50,15 @@ app.use("/api/:tool/malware", upload.single("apkFile"), async (req, res) => {
   if (!apkFilePath) {
     return res.status(400).json({ error: "No APK file uploaded" });
   }
-  console.log('apk path : ', apkFilePath)
-  let tool = req.params.tool
-  if(tool == "SUPER Android Analyzer"){
+  console.log("apk path : ", apkFilePath);
+  let tool = req.params.tool;
+  if (tool == "SUPER Android Analyzer") {
     renameToApk(apkFilePath);
-    let resultPath = "/home/lavkush/tools/super-analyzer/"
-    let command = `super-analyzer ${apkFilePath} --results ${resultPath} --json`
-    console.log(command)
+    let resultPath = "/home/lavkush/tools/super-analyzer/";
+    let command = `super-analyzer ${apkFilePath} --results ${resultPath} --json`;
+    console.log(command);
     exec(command, { stdio: "pipe" }, (error, stdout, stderr) => {
-      let filePath = resultPath + '/de.ecspride/results.json'
+      let filePath = resultPath + "/de.ecspride/results.json";
       if (fs.existsSync(filePath)) {
         console.log("in if block");
         // Set the appropriate headers for file download
@@ -74,9 +75,9 @@ app.use("/api/:tool/malware", upload.single("apkFile"), async (req, res) => {
         console.log("in else block");
         res.status(404).json({ error: "File not found" });
       }
-    })
+    });
   }
-})
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -274,27 +275,35 @@ function renameToApk(filePath) {
 
 // });
 
-function getFilePathForAPKLeaks(toolPath, stdout, tool, apkInfo){
-  let str = "** Results saved into '"
-  console.log(`Stdout : --${stdout}--`)
+function getFilePathForAPKLeaks(toolPath, stdout, tool, apkInfo) {
+  let str = "** Results saved into '";
+  console.log(`Stdout : --${stdout}--`);
   // let ind = stdout.indexOf(str) + str.length + 1;
-  let fileName = "results.txt"
-  console.log('File name : ', fileName)
-  let startIndex = toolPath.split("").reverse().join("").indexOf('/')
-  let toolPathWithoutTool = toolPath.split("").reverse().join("").slice(startIndex).split("").reverse().join("")
-  console.log('tool path : ', toolPathWithoutTool)
+  let fileName = "results.txt";
+  console.log("File name : ", fileName);
+  let startIndex = toolPath.split("").reverse().join("").indexOf("/");
+  let toolPathWithoutTool = toolPath
+    .split("")
+    .reverse()
+    .join("")
+    .slice(startIndex)
+    .split("")
+    .reverse()
+    .join("");
+  console.log("tool path : ", toolPathWithoutTool);
   filePath = path.join(toolPathWithoutTool, fileName);
-  console.log("file path : ", filePath)
-  return filePath
+  console.log("file path : ", filePath);
+  return filePath;
 }
 
 app.post("/run-command", (req, res) => {
   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  const { tool, apkInfo } = req.body;
-  console.log("apkinfo:", apkInfo);
+  const { tool, apkInfo, apkName } = req.body;
+  console.log("apkinfooooooooooooooooo:", apkInfo);
+  console.log("ORIGINAL NAME: ", apkName);
   let toolPath = "";
   let command = "";
-  let filePath = ""
+  let filePath = "";
   if (tool === "Androwarn") {
     toolPath = "/home/lavkush/Desktop/thesis/androwarn/androwarn.py";
     command = `python3 ${toolPath} -i "${apkInfo.filePath.replace(
@@ -314,10 +323,13 @@ app.post("/run-command", (req, res) => {
     toolPath = "/home/lavkush/Desktop/qark/qark/qark.py";
     command = `qark --apk "${apkInfo.filePath}.apk" --report-type json`;
     console.log(command);
-  } else if(tool === "APKLeaks"){
+  } else if (tool === "APKLeaks") {
     toolPath = "/home/lavkush/tools/apkleaks/apkleaks.py";
-    command = `python3 ${toolPath} -f "${apkInfo.filePath.replace(/\\/g,"\\\\")}" -o results.txt`;
-  }else {
+    command = `python3 ${toolPath} -f "${apkInfo.filePath.replace(
+      /\\/g,
+      "\\\\"
+    )}" -o results.txt`;
+  } else {
     return res.status(400).json({ error: "Invalid tool" });
   }
   console.log("Tool : ", tool);
@@ -334,11 +346,11 @@ app.post("/run-command", (req, res) => {
     // console.log('error : ', stderr)
     // console.log('\n\n')
     let str = "backend";
-    if(tool == "APKLeaks"){
-      filePath = getFilePathForAPKLeaks(toolPath, stdout, tool, apkInfo)
+    if (tool == "APKLeaks") {
+      filePath = getFilePathForAPKLeaks(toolPath, stdout, tool, apkInfo);
       // str = "[LinkFinder]";
       // return;
-    }else{
+    } else {
       if (tool == "qark") {
         str = "Finish writing report to";
       }
@@ -346,6 +358,7 @@ app.post("/run-command", (req, res) => {
       let fileName = stdout.slice(ind);
       // let endIdx = fileName.indexOf('.csv') + 4
       // fileName = fileName.slice(0, endIdx)
+      let dirQark = "";
       console.log(`File name : ->${fileName}<-`);
       if (tool == "Androwarn") {
         var commaInd = fileName.indexOf("'");
@@ -353,6 +366,24 @@ app.post("/run-command", (req, res) => {
         var commaInd = fileName.indexOf(" >>>");
       } else if (tool == "qark") {
         var commaInd = fileName.indexOf(".json") + 5;
+
+        // ******************************************************
+        fileName = fileName.slice(0, commaInd);
+        const jsonData = JSON.parse(fs.readFileSync(fileName, "utf8"));
+        const textData = JSON.stringify(jsonData, null, 2);
+
+        // const baseName = path.basename(fileName, '.json');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const textFileName = `qark-${timestamp}.txt`;
+        const dir = "Reports/" + textFileName;
+        dirQark = dir;
+        // Define the path for the text file
+        // const textFilePath = path.join(dir, textFileName);
+
+        // Save the text data to a text file
+        fs.writeFileSync(dir, textData, "utf8");
+
+        // ******************************************************
       }
       fileName = fileName.slice(0, commaInd);
       console.log("filename length : ", fileName.length);
@@ -360,6 +391,24 @@ app.post("/run-command", (req, res) => {
       console.log("file name : ", fileName);
       filePath = path.join(__dirname, fileName);
       console.log("file path : ", filePath);
+      if (tool == "qark") {
+        filePath = dirQark;
+      }
+      // ################## STORE IN DATABASE ###################
+
+      const currentDateTime = new Date().toISOString();
+      const insertqry = `INSERT INTO testreport (toolname, time_of_test, reportlocation, apkname ) VALUES ( '${tool}', '${currentDateTime}', '${filePath}', '${apkName}' )`;
+      pool
+        .query(insertqry)
+        .then((response) => {
+          console.log("DATA SAVED");
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // #####################################################
     }
 
     if (fs.existsSync(filePath)) {
@@ -422,6 +471,39 @@ app.post("/run-command", (req, res) => {
     // res.json({ result: 'Command executed successfully', reportFilePath });
   });
 });
+
+// ***********************************
+
+app.get("/readfile", (req, res) => {
+  const filePath = req.query.path;
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).send("Error reading file");
+    }
+    res.send(data);
+  });
+});
+
+// ***********************************
+
+//************************************
+
+app.get("/retrive", (req, res) => {
+  const qry = `SELECT * FROM testreport;`;
+
+  pool
+    .query(qry)
+    .then((response) => {
+      console.log("Query successful");
+      res.json(response.rows); // Send the result rows as JSON
+    })
+    .catch((err) => {
+      console.error("Query error", err);
+      res.status(500).send("An error occurred while retrieving the data");
+    });
+});
+
+// *************************************
 
 // function deleteOldFiles() {
 //   fs.readdir(uploadDirectory, (err, files) => {
@@ -789,6 +871,7 @@ app.post("/upload-apk", upload.single("apkFile"), (req, res) => {
   if (req.file) {
     // File uploaded successfully
     const { originalname, path, mimetype } = req.file;
+    // console.log("ORIGINAL NAME: ", originalname);
     console.log(path);
     // Process the uploaded APK file and extract information
     // Implement your APK analysis logic here to extract the necessary information
@@ -796,6 +879,8 @@ app.post("/upload-apk", upload.single("apkFile"), (req, res) => {
 
     // Example implementation using mock APK information
     const apkInfo = {
+      SAMPLE: "SAMPLE================================================",
+      originalName: originalname,
       packageName: "com.example.app",
       versionName: "1.0",
       permissions: [

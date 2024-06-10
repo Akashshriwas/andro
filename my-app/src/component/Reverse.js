@@ -101,6 +101,9 @@ const Reverse = () => {
       >
         <option value="">Select a tool</option>
         <option value="apktool">Apk Tool</option>
+        <option value="d2j-dex2jar">d2j-dex2jar</option>
+        <option value="JD-GUI">JD-GUI</option>
+        <option value="Virtuous Ten studio">Virtuous Ten studio</option>
         {/* Add other tool options here */}
       </select>
       <h2>Upload an APK File</h2>
